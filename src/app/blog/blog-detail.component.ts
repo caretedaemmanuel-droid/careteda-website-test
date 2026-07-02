@@ -4,11 +4,13 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 interface ContentBlock {
-  type: 'p' | 'ul' | 'img' | 'html' | 'caption';
+  type: 'p' | 'ul' | 'img' | 'html' | 'caption' | 'ref';
   text?: string;
   items?: string[];
   src?: string;
   alt?: string;
+  href?: string;
+  linkText?: string;
 }
 
 interface Section {
@@ -94,6 +96,10 @@ interface BlogPost {
                   <img [src]="block.src" [alt]="block.alt || ''" class="w-full object-cover">
                 </div>
                 <p *ngIf="block.type === 'caption'" class="text-white/60 text-sm leading-relaxed italic -mt-2 mb-4">{{ block.text }}</p>
+                <p *ngIf="block.type === 'ref'" class="text-white/95 text-base leading-relaxed">
+                  <span>{{ block.text }}</span>
+                  <a *ngIf="block.href" [href]="block.href" target="_blank" rel="noopener noreferrer" class="text-[#60A5FA] underline underline-offset-2 break-all hover:text-white transition-colors">{{ block.linkText || block.href }}</a>
+                </p>
                 <p *ngIf="block.type === 'html'" class="text-white/95 text-base leading-relaxed" [innerHTML]="block.text"></p>
               </ng-container>
             </ng-container>
@@ -133,6 +139,7 @@ export class BlogDetailComponent implements OnInit {
       title: 'The Spec Is the Bottleneck, Not the Silicon',
       date: 'July 2026',
       readTime: '7 min read',
+      wordCount: '1,464 words',
       category: 'AI & Hardware Design',
       author: 'Sashi Obilisetty',
       authorRole: 'Co-founder & CEO, CaretEDA, Inc.',
@@ -198,12 +205,12 @@ export class BlogDetailComponent implements OnInit {
         {
           heading: 'References',
           blocks: [
-            { type: 'html', text: '[1] A Critical Review and Evaluation of LLMs for RTL Generation. <a href="https://www.researchgate.net/publication/400927513_A_Critical_Review_and_Evaluation_of_LLMs_for_RTL_Generation" target="_blank" rel="noopener noreferrer" style="color:#2563EB;text-decoration:none;">ResearchGate</a>' },
-            { type: 'html', text: '[2] Understanding and Mitigating Errors of LLM-Generated RTL Code. arXiv:2508.05266. <a href="https://arxiv.org/pdf/2508.05266" target="_blank" rel="noopener noreferrer" style="color:#2563EB;text-decoration:none;">PDF</a>' },
-            { type: 'html', text: '[3] Spec2RTL-Agent: Automated Hardware Code Generation from Complex Specifications Using LLM Agent Systems. arXiv:2506.13905. <a href="https://arxiv.org/pdf/2506.13905" target="_blank" rel="noopener noreferrer" style="color:#2563EB;text-decoration:none;">PDF</a>' },
-            { type: 'html', text: '[4] Proof2Silicon: Prompt Repair for Verified Code and Hardware Generation via Reinforcement Learning. arXiv:2509.06239. <a href="https://arxiv.org/pdf/2509.06239" target="_blank" rel="noopener noreferrer" style="color:#2563EB;text-decoration:none;">PDF</a>' },
-            { type: 'html', text: '[5] Cosler, M., Hahn, C., Mendoza, D., Schmitt, F., and Trippel, C. nl2spec: Interactively Translating Unstructured Natural Language to Temporal Logics with Large Language Models. CAV 2023, arXiv:2303.04864. <a href="https://arxiv.org/abs/2303.04864" target="_blank" rel="noopener noreferrer" style="color:#2563EB;text-decoration:none;">Abstract</a>' },
-            { type: 'html', text: '[6] SIGARCH Blog: Interactively Translating Unstructured Natural Language to Temporal Logics with nl2spec. <a href="https://www.sigarch.org/interactively-translating-unstructured-natural-language-to-temporal-logics-with-nl2spec/" target="_blank" rel="noopener noreferrer" style="color:#2563EB;text-decoration:none;">Article</a>' },
+            { type: 'ref', text: '[1] A Critical Review and Evaluation of LLMs for RTL Generation. ', href: 'https://www.researchgate.net/publication/400927513_A_Critical_Review_and_Evaluation_of_LLMs_for_RTL_Generation' },
+            { type: 'ref', text: '[2] Understanding and Mitigating Errors of LLM-Generated RTL Code. arXiv:2508.05266. ', href: 'https://arxiv.org/pdf/2508.05266' },
+            { type: 'ref', text: '[3] Spec2RTL-Agent: Automated Hardware Code Generation from Complex Specifications Using LLM Agent Systems. arXiv:2506.13905. ', href: 'https://arxiv.org/pdf/2506.13905' },
+            { type: 'ref', text: '[4] Proof2Silicon: Prompt Repair for Verified Code and Hardware Generation via Reinforcement Learning. arXiv:2509.06239. ', href: 'https://arxiv.org/pdf/2509.06239' },
+            { type: 'ref', text: '[5] Cosler, M., Hahn, C., Mendoza, D., Schmitt, F., and Trippel, C. nl2spec: Interactively Translating Unstructured Natural Language to Temporal Logics with Large Language Models. CAV 2023, arXiv:2303.04864. ', href: 'https://arxiv.org/abs/2303.04864' },
+            { type: 'ref', text: '[6] SIGARCH Blog: Interactively Translating Unstructured Natural Language to Temporal Logics with nl2spec. ', href: 'https://www.sigarch.org/interactively-translating-unstructured-natural-language-to-temporal-logics-with-nl2spec/' },
           ]
         },
       ]
@@ -430,6 +437,7 @@ export class BlogDetailComponent implements OnInit {
       subtitle: 'Rising Chip Design Complexity, Shrinking Tapeout Cycles, and the AI Transformation of System Design',
       date: 'March 2026',
       readTime: '5 min read',
+      wordCount: '1,000 words',
       category: 'Industry & Strategy',
       author: 'Sashi Obilisetty',
       authorRole: 'Co-founder & CEO, CaretEDA',
