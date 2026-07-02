@@ -131,9 +131,8 @@ export class BlogDetailComponent implements OnInit {
   private posts: { [slug: string]: BlogPost } = {
     'spec-bottleneck': {
       title: 'The Spec Is the Bottleneck, Not the Silicon',
-      date: 'June 2026',
+      date: 'July 2026',
       readTime: '7 min read',
-      wordCount: '1,464 words',
       category: 'AI & Hardware Design',
       author: 'Sashi Obilisetty',
       authorRole: 'Co-founder & CEO, CaretEDA, Inc.',

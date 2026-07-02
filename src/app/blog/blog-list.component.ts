@@ -49,7 +49,7 @@ export class BlogListComponent implements OnInit {
     {
       slug: 'spec-bottleneck',
       image: 'assets/blogs/spec-bottleneck-hero.png',
-      date: 'June 2026',
+      date: 'July 2026',
       readTime: '7 min read',
       title: 'The Spec Is the Bottleneck, Not the Silicon',
       summary: 'Why agentic chip design breaks when ambiguous specs are silently resolved, and why formalization has to sit before RTL generation.'
