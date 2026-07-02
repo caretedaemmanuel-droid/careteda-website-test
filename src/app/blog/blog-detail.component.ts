@@ -4,7 +4,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 interface ContentBlock {
-  type: 'p' | 'ul' | 'img' | 'html';
+  type: 'p' | 'ul' | 'img' | 'html' | 'caption';
   text?: string;
   items?: string[];
   src?: string;
@@ -93,6 +93,7 @@ interface BlogPost {
                 <div *ngIf="block.type === 'img'" class="w-full rounded-xl overflow-hidden my-6">
                   <img [src]="block.src" [alt]="block.alt || ''" class="w-full object-cover">
                 </div>
+                <p *ngIf="block.type === 'caption'" class="text-white/60 text-sm leading-relaxed italic -mt-2 mb-4">{{ block.text }}</p>
                 <p *ngIf="block.type === 'html'" class="text-white/95 text-base leading-relaxed" [innerHTML]="block.text"></p>
               </ng-container>
             </ng-container>
@@ -128,6 +129,87 @@ export class BlogDetailComponent implements OnInit {
   post?: BlogPost;
 
   private posts: { [slug: string]: BlogPost } = {
+    'spec-bottleneck': {
+      title: 'The Spec Is the Bottleneck, Not the Silicon',
+      date: 'June 2026',
+      readTime: '7 min read',
+      wordCount: '1,464 words',
+      category: 'AI & Hardware Design',
+      author: 'Sashi Obilisetty',
+      authorRole: 'Co-founder & CEO, CaretEDA, Inc.',
+      heroImage: 'assets/blogs/spec-bottleneck-hero.png',
+      summary: 'Why agentic chip design breaks when ambiguous specs are silently resolved, and why formalization has to sit before RTL generation.',
+      sections: [
+        {
+          blocks: [
+            { type: 'p', text: `The agent finished in forty seconds. It read the spec, generated the Verilog, wrote its own testbench, ran simulation, and reported a clean pass. Three weeks later, the chip mis-fired on a transition nobody had tested for. The module was supposed to flag every edge on the input line. It only flagged the rising ones. The spec had said "detect any edge" in one clause and "capture a 0-to-1 transition" in another. The agent picked one reading, built a coherent design around it, and never mentioned that the document disagreed with itself.[2]` },
+            { type: 'p', text: `This failure - documented in a systematic analysis across GPT-3.5 Turbo, GPT-4 Turbo, and Qwen-Coder-32B on the VerilogEval benchmark - is classified as an "Unclear Overall Module Functionality" error: an internal spec contradiction where both behaviors are synthesizable, both pass the agent's self-generated tests, and only one matches the golden reference. The study used models from 2023-24; today's frontier models are considerably more capable. The underlying problem is not. A more fluent model resolving an ambiguous spec still resolves it silently - it just does so with greater confidence.` },
+          ]
+        },
+        {
+          heading: 'The Wrong Bottleneck',
+          blocks: [
+            { type: 'p', text: `Almost every conversation about AI in chip design starts with the same metric: how fast can the model generate RTL? Tokens per second, lines per prompt, modules per hour. It is a seductive number because it is easy to measure and easy to put on a slide. It is also the wrong number to optimize, because generation speed has almost nothing to do with where agentic design flows actually break.` },
+            { type: 'p', text: `A recent evaluation of frontier language models on RTL generation made the point bluntly: free-form natural language is too ambiguous for automation, especially once specifications grow past a paragraph and start spanning tables, timing diagrams, and cross-referenced sections.[1] The researchers' conclusion wasn't "use a bigger model." It was that the field needs controlled, structured specification formalisms before generation quality can improve in any durable way.` },
+            { type: 'p', text: `That conclusion lands differently depending on where you sit. If your roadmap is "ship a better RTL-generation model," it's bad news - it means the bottleneck isn't yours to fix with model quality alone. If your roadmap is Spec-to-Netlist, building the formalization layer underneath generation, it's the whole thesis.` },
+          ]
+        },
+        {
+          heading: 'The Ambiguity the Engineer Never Noticed',
+          blocks: [
+            { type: 'p', text: `Human engineers are remarkably good at reading ambiguous specs correctly, and remarkably bad at noticing they're doing it. Years of tribal knowledge, hallway conversations, and "that's just how we always do resets here" quietly fill every gap in a document before an engineer ever opens an editor. The ambiguity doesn't disappear. It just gets resolved by a human brain fast enough that nobody notices a decision was made at all.` },
+            { type: 'p', text: `An agent has none of that tribal context, and unlike a junior engineer, it rarely asks a clarifying question. A study cataloguing errors in LLM-generated RTL sorted the recurring ambiguity failures into a few clear buckets,[2] and each one maps to a real gap in how specs get written today:` },
+            { type: 'ul', items: [
+              `Unclear functional intent: The edge-detector case above is a textbook instance: one part of a description says one thing, a later section says another, and the model never flags the contradiction - it just silently picks a side.`,
+              `Ambiguous interface boundaries: Specs frequently under-describe what happens at the edges of an interface: which signal has priority when two conditions overlap, what a width mismatch should do, what "invalid" actually means for a given port. Humans default to convention. Agents default to whatever reading minimizes their own uncertainty, which is not the same thing.`,
+              `Missing reset and initialization behavior: Reset polarity, synchronous versus asynchronous behavior, and initial register values are exactly the kind of detail that feels too obvious to write down - right up until it's the line item that fails timing closure or, worse, passes simulation and fails in the lab.`,
+            ] },
+            { type: 'p', text: `None of these are exotic edge cases. They are the ordinary texture of how specifications get written by people who already know what they mean and are writing for other people who will fill in the rest.` },
+            { type: 'img', src: 'assets/blogs/spec-bottleneck-ambiguity.png', alt: 'Three ways a specification can become ambiguous' },
+            { type: 'caption', text: 'Figure 1. The three recurring ambiguity classes behind LLM-generated RTL errors.' },
+          ]
+        },
+        {
+          heading: "Why a Smarter Model Doesn't Fix It",
+          blocks: [
+            { type: 'p', text: `It's tempting to treat this as a model-capability problem - wait for the next generation of LLMs and the ambiguity will resolve itself. But ambiguity in a spec isn't a knowledge gap the model is missing; it's information that was never in the document in the first place. No amount of additional model capability can recover a decision that no one made.` },
+            { type: 'p', text: `This is precisely why multi-agent RTL pipelines have started inserting an explicit translation step between the spec and the code. One architecture for generating hardware from complex, unstructured specification documents - spanning prose, tables, and timing diagrams - routes everything through an intermediate representation before any RTL gets written, precisely because direct spec-to-Verilog generation keeps reproducing the same class of semantic errors.[3] Related work on verified code generation reaches the same architectural conclusion from the formal-verification side: route through a structured, checkable intermediate form before synthesis, rather than generating hardware directly from prose.[4]` },
+            { type: 'p', text: `The pattern repeats outside RTL generation, too. In hardware verification, formal methods researchers have spent years building tools that translate natural-language requirements into temporal logic - the formal language that model checkers and assertion engines actually consume. One such framework doesn't just produce a translation; it maps each fragment of the resulting formula back to the exact phrase in the original sentence that produced it, specifically so a human can see where the model resolved an ambiguity and correct it before it propagates anywhere downstream.[5][6]` },
+            { type: 'p', text: `Consider a deceptively simple requirement: two requests should never be granted at the same time, and a grant should always eventually follow a request. Stated in a sentence, that sounds complete. Formalized, it's a precise conjunction of mutual-exclusion and eventual-response properties - and the act of formalizing it is what surfaces the question nobody asked out loud: eventually according to what bound? The English sentence was fluent. The formal version is the part that's actually correct, or visibly incomplete.` },
+            { type: 'p', text: `Fluency is not the same as completeness. Agents are exceptionally good at the former and indifferent to the latter.` },
+            { type: 'img', src: 'assets/blogs/spec-bottleneck-flow.png', alt: 'Where formalization sits in the chip design flow' },
+            { type: 'caption', text: 'Figure 2. The formalization layer sits between prose and generation, where ambiguity surfaces once instead of silently downstream.' },
+          ]
+        },
+        {
+          heading: 'Formalization Is the Missing Step',
+          blocks: [
+            { type: 'p', text: `If ambiguity lives in the spec and not in the model, then the highest-leverage place to intervene in an agentic chip design flow isn't the generation step at all. It's the step before it - the one that turns a prose document, however well written, into something with only one possible reading.` },
+            { type: 'p', text: `That's a different kind of product than "better RTL generation," and it's worth being precise about what it actually requires. It means structured specification schemas that force a functional description to declare its edge cases instead of implying them. It means an intermediate representation that an agent, a verification engine, and a human reviewer can all inspect and agree on before a single line of RTL gets written. It means traceability from every formalized clause back to the sentence that produced it, so a contradiction surfaces as a flagged question rather than a silent design decision three weeks from a tape-out.` },
+            { type: 'p', text: `None of this is about distrusting the model. It's about recognizing that a model faithfully executing an ambiguous instruction will produce a faithfully ambiguous result - confidently, consistently, and without raising its hand. The fix isn't a smarter executor. It's a spec that doesn't need one.` },
+            { type: 'p', text: `For a platform built around the idea of going from specification straight to netlist, that reframes the hardest engineering problem on the roadmap. The interesting work was never going to be generating Verilog faster. It's building the formalization layer that makes the spec itself trustworthy enough to generate from - the layer where ambiguity gets caught on a reviewer's screen instead of in a customer's silicon.` },
+          ]
+        },
+        {
+          heading: 'About CaretEDA',
+          blocks: [
+            { type: 'p', text: 'CaretEDA builds AI-native design systems for modern semiconductor teams, with its Spec-to-Netlist™ platform serving as a powerful force multiplier across the entire engineering workflow. To learn more or request a demo, contact info@careteda.com' },
+          ]
+        },
+        {
+          heading: 'References',
+          blocks: [
+            { type: 'html', text: '[1] A Critical Review and Evaluation of LLMs for RTL Generation. <a href="https://www.researchgate.net/publication/400927513_A_Critical_Review_and_Evaluation_of_LLMs_for_RTL_Generation" target="_blank" rel="noopener noreferrer" style="color:#2563EB;text-decoration:none;">ResearchGate</a>' },
+            { type: 'html', text: '[2] Understanding and Mitigating Errors of LLM-Generated RTL Code. arXiv:2508.05266. <a href="https://arxiv.org/pdf/2508.05266" target="_blank" rel="noopener noreferrer" style="color:#2563EB;text-decoration:none;">PDF</a>' },
+            { type: 'html', text: '[3] Spec2RTL-Agent: Automated Hardware Code Generation from Complex Specifications Using LLM Agent Systems. arXiv:2506.13905. <a href="https://arxiv.org/pdf/2506.13905" target="_blank" rel="noopener noreferrer" style="color:#2563EB;text-decoration:none;">PDF</a>' },
+            { type: 'html', text: '[4] Proof2Silicon: Prompt Repair for Verified Code and Hardware Generation via Reinforcement Learning. arXiv:2509.06239. <a href="https://arxiv.org/pdf/2509.06239" target="_blank" rel="noopener noreferrer" style="color:#2563EB;text-decoration:none;">PDF</a>' },
+            { type: 'html', text: '[5] Cosler, M., Hahn, C., Mendoza, D., Schmitt, F., and Trippel, C. nl2spec: Interactively Translating Unstructured Natural Language to Temporal Logics with Large Language Models. CAV 2023, arXiv:2303.04864. <a href="https://arxiv.org/abs/2303.04864" target="_blank" rel="noopener noreferrer" style="color:#2563EB;text-decoration:none;">Abstract</a>' },
+            { type: 'html', text: '[6] SIGARCH Blog: Interactively Translating Unstructured Natural Language to Temporal Logics with nl2spec. <a href="https://www.sigarch.org/interactively-translating-unstructured-natural-language-to-temporal-logics-with-nl2spec/" target="_blank" rel="noopener noreferrer" style="color:#2563EB;text-decoration:none;">Article</a>' },
+          ]
+        },
+      ]
+    },
+
     'verilator': {
       title: 'Verilator: The Open-Source Simulator Reshaping Chip Design',
       date: 'May 2026',
@@ -228,7 +310,7 @@ export class BlogDetailComponent implements OnInit {
         {
           heading: 'About CaretEDA',
           paragraphs: [
-            'CaretEDA builds AI-native design systems for modern semiconductor teams, with its SpecToNetlist™ platform serving as a powerful force multiplier across the entire engineering workflow. To learn more or request a demo, contact info@careteda.com',
+            'CaretEDA builds AI-native design systems for modern semiconductor teams, with its Spec-to-Netlist™ platform serving as a powerful force multiplier across the entire engineering workflow. To learn more or request a demo, contact info@careteda.com',
           ]
         },
       ]
