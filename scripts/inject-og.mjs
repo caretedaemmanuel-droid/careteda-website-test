@@ -19,6 +19,12 @@ const template = readFileSync(join(DIST, 'index.html'), 'utf8');
 const routes = [
   // Blog posts — each gets its own image + title (matches careteda.com behaviour)
   {
+    path: 'blogs/spec-bottleneck',
+    title: 'The Spec Is the Bottleneck, Not the Silicon',
+    desc: 'Why agentic chip design breaks when ambiguous specs are silently resolved, and why formalization has to sit before RTL generation.',
+    image: 'assets/blogs/spec-bottleneck-hero.png',
+  },
+  {
     path: 'blogs/verilator',
     title: 'Verilator: The Open-Source Simulator Reshaping Chip Design',
     desc: 'How a tool born at Digital Equipment Corporation in 1994 ended up at the center of chip verification for Tesla, Google, AMD, and NVIDIA.',
