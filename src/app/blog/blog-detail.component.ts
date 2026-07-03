@@ -43,7 +43,7 @@ interface BlogPost {
   imports: [CommonModule, RouterModule],
   template: `
     <section class="min-h-screen bg-black text-white pt-28 pb-20 px-4 md:px-8">
-      <div class="max-w-[920px] mx-auto" *ngIf="post">
+      <div class="max-w-[800px] mx-auto" *ngIf="post">
         <a
           [routerLink]="['/blogs']"
           class="inline-flex items-center gap-2 text-white/70 hover:text-[#2563EB] text-sm no-underline transition-colors mb-12"
@@ -66,7 +66,7 @@ interface BlogPost {
         </div>
 
         <!-- Hero Image -->
-        <div class="w-full rounded-2xl overflow-hidden mb-10" *ngIf="post.heroImage">
+        <div class="w-full rounded-2xl overflow-hidden mb-8" *ngIf="post.heroImage">
           <img [src]="post.heroImage" [alt]="post.title" class="w-full object-cover" />
         </div>
 
@@ -198,11 +198,6 @@ export class BlogDetailComponent implements OnInit {
       heroImage: 'assets/blogs/spec-bottleneck-hero.png',
       summary:
         'Why agentic chip design breaks when ambiguous specs are silently resolved, and why formalization has to sit before RTL generation.',
-      keyTakeaways: [
-        'Fluency is not the same as completeness.',
-        'The ambiguity lives in the spec and not in the model.',
-        "Human engineers are remarkably good at reading ambiguous specs correctly, and remarkably bad at noticing they're doing it.",
-      ],
       sections: [
         {
           blocks: [
