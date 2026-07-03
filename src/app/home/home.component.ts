@@ -1,4 +1,12 @@
-import { Component, AfterViewInit, OnDestroy, Inject, PLATFORM_ID, ChangeDetectorRef, NgZone } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  OnDestroy,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectorRef,
+  NgZone,
+} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ScrollService } from '../shared/scroll.service';
@@ -7,7 +15,7 @@ import { ScrollService } from '../shared/scroll.service';
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './home.component.html'
+  templateUrl: './home.component.html',
 })
 export class HomeComponent implements AfterViewInit, OnDestroy {
   currentSlide = 0;
@@ -27,7 +35,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     private scrollService: ScrollService,
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {}
 
   ngAfterViewInit() {
@@ -78,7 +86,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   stopAutoplay() {
-    if (this.timer !== null) { clearTimeout(this.timer); this.timer = null; }
+    if (this.timer !== null) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
   }
 
   // Hovering / moving over a slide's content (text, CTAs like "Schedule a Demo"
@@ -99,7 +110,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   private clearIdle() {
-    if (this.idleTimer !== null) { clearTimeout(this.idleTimer); this.idleTimer = null; }
+    if (this.idleTimer !== null) {
+      clearTimeout(this.idleTimer);
+      this.idleTimer = null;
+    }
   }
 
   // Freeze the timer and the progress pill where they are.

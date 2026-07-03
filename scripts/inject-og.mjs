@@ -50,13 +50,48 @@ const routes = [
     image: DEFAULT_IMAGE,
   },
   // Section / landing pages — generic brand image, page-specific title & description
-  { path: 'blogs',   title: 'Blog',    desc: 'Insights on AI-native chip design, EDA, and semiconductor engineering from the CaretEDA team.', image: DEFAULT_IMAGE },
-  { path: 'news',    title: 'News',    desc: 'The latest announcements from CaretEDA.', image: DEFAULT_IMAGE },
-  { path: 'about',   title: 'About CaretEDA', desc: 'CaretEDA automates chip design from natural-language specification to silicon-ready netlist with its AI-native Spec-to-Netlist™ platform.', image: DEFAULT_IMAGE },
-  { path: 'team',    title: 'Team',    desc: 'Meet the team building CaretEDA’s AI-native chip design platform.', image: DEFAULT_IMAGE },
-  { path: 'careers', title: 'Careers', desc: 'Join CaretEDA and help reshape how chips are designed with AI-native, agentic EDA.', image: DEFAULT_IMAGE },
-  { path: 'ifaq',    title: 'IFAQ',    desc: 'Everything you need to know before, during, and after your Spec-to-Netlist™ evaluation.', image: DEFAULT_IMAGE },
-  { path: 'demos',   title: 'Demos',   desc: 'Watch Spec-to-Netlist™ in motion — from design intent to silicon-ready output.', image: DEFAULT_IMAGE },
+  {
+    path: 'blogs',
+    title: 'Blog',
+    desc: 'Insights on AI-native chip design, EDA, and semiconductor engineering from the CaretEDA team.',
+    image: DEFAULT_IMAGE,
+  },
+  {
+    path: 'news',
+    title: 'News',
+    desc: 'The latest announcements from CaretEDA.',
+    image: DEFAULT_IMAGE,
+  },
+  {
+    path: 'about',
+    title: 'About CaretEDA',
+    desc: 'CaretEDA automates chip design from natural-language specification to silicon-ready netlist with its AI-native Spec-to-Netlist™ platform.',
+    image: DEFAULT_IMAGE,
+  },
+  {
+    path: 'team',
+    title: 'Team',
+    desc: 'Meet the team building CaretEDA’s AI-native chip design platform.',
+    image: DEFAULT_IMAGE,
+  },
+  {
+    path: 'careers',
+    title: 'Careers',
+    desc: 'Join CaretEDA and help reshape how chips are designed with AI-native, agentic EDA.',
+    image: DEFAULT_IMAGE,
+  },
+  {
+    path: 'ifaq',
+    title: 'IFAQ',
+    desc: 'Everything you need to know before, during, and after your Spec-to-Netlist™ evaluation.',
+    image: DEFAULT_IMAGE,
+  },
+  {
+    path: 'demos',
+    title: 'Demos',
+    desc: 'Watch Spec-to-Netlist™ in motion — from design intent to silicon-ready output.',
+    image: DEFAULT_IMAGE,
+  },
 ];
 
 const escapeAttr = (s) =>

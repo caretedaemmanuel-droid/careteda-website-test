@@ -12,16 +12,16 @@ import { NewsComponent } from './news/news.component';
 import { NewsDetailComponent } from './news/news-detail.component';
 
 export const routes: Routes = [
-  { path: '',                component: HomeComponent },
-  { path: 'about',           component: AboutComponent },
-  { path: 'team',            component: TeamComponent },
-  { path: 'demos',           component: DemosComponent },
-  { path: 'news',            component: NewsComponent },
+  { path: '', component: HomeComponent },
+  { path: 'about', component: AboutComponent },
+  { path: 'team', component: TeamComponent },
+  { path: 'demos', component: DemosComponent },
+  { path: 'news', component: NewsComponent },
   { path: 'news/technical-advisors', component: NewsDetailComponent },
-  { path: 'blogs',           component: BlogListComponent },
-  { path: 'blogs/:slug',     component: BlogDetailComponent },
-  { path: 'ifaq',            component: IFAQComponent },
-  { path: 'careers',         component: CareersComponent },
-  { path: 'careers/:slug',   component: CareersDetailComponent },
-  { path: '**',              redirectTo: '' },
+  { path: 'blogs', component: BlogListComponent },
+  { path: 'blogs/:slug', component: BlogDetailComponent },
+  { path: 'ifaq', component: IFAQComponent },
+  { path: 'careers', component: CareersComponent },
+  { path: 'careers/:slug', component: CareersDetailComponent },
+  { path: '**', redirectTo: '' },
 ];
